@@ -4,4 +4,5 @@ export const environment = {
     apiPolleria: "https://test-hosting-back.somee.com/api/",
     apiVeterinariaTommy: "https://newsoawebsiste.somee.com/api/",
     apiHospedajeF1: "",
+    apiMain: "http://localhost:8085/api/",
 };
