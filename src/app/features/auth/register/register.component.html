@@ -1,0 +1,122 @@
+<div class="register-container">
+  <div class="register-card">
+    <div class="register-header">
+      <h1 class="register-title">Crear Cuenta</h1>
+      <p class="register-subtitle">Completa tus datos para registrarte</p>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Success Message -->
+      <div *ngIf="successMessage" class="success-message">
+        {{ successMessage }}
+      </div>
+
+      <!-- Username Field -->
+      <div class="form-group">
+        <label class="form-label" for="username">Usuario *</label>
+        <input 
+          type="text" 
+          id="username"
+          formControlName="username"
+          class="form-input"
+          placeholder="Elige un nombre de usuario"
+          [class.error]="username?.invalid && username?.touched"
+        >
+        <div 
+          *ngIf="username?.invalid && username?.touched" 
+          class="error-text"
+        >
+          {{ getFieldError('username') }}
+        </div>
+      </div>
+
+      <!-- Name and Last Name Fields -->
+      <div class="form-row">
+        <div class="form-group half">
+          <label class="form-label" for="name">Nombre *</label>
+          <input 
+            type="text" 
+            id="name"
+            formControlName="name"
+            class="form-input"
+            placeholder="Tu nombre"
+            [class.error]="name?.invalid && name?.touched"
+          >
+          <div 
+            *ngIf="name?.invalid && name?.touched" 
+            class="error-text"
+          >
+            {{ getFieldError('name') }}
+          </div>
+        </div>
+
+        <div class="form-group half">
+          <label class="form-label" for="last_name">Apellido *</label>
+          <input 
+            type="text" 
+            id="last_name"
+            formControlName="last_name"
+            class="form-input"
+            placeholder="Tu apellido"
+            [class.error]="last_name?.invalid && last_name?.touched"
+          >
+          <div 
+            *ngIf="last_name?.invalid && last_name?.touched" 
+            class="error-text"
+          >
+            {{ getFieldError('last_name') }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label class="form-label" for="password">Contraseña *</label>
+        <div class="password-container">
+          <input 
+            [type]="showPassword ? 'text' : 'password'"
+            id="password"
+            formControlName="password"
+            class="form-input"
+            placeholder="Mínimo 6 caracteres"
+            [class.error]="password?.invalid && password?.touched"
+          >
+          <button 
+            type="button" 
+            class="password-toggle"
+            (click)="togglePasswordVisibility()"
+          >
+            {{ showPassword ? '🙈' : '👁️' }}
+          </button>
+        </div>
+        <div 
+          *ngIf="password?.invalid && password?.touched" 
+          class="error-text"
+        >
+          {{ getFieldError('password') }}
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button 
+        type="submit" 
+        class="register-button"
+        [disabled]="registerForm.invalid || isLoading"
+      >
+        <span *ngIf="isLoading" class="spinner"></span>
+        {{ isLoading ? 'Creando cuenta...' : 'Crear Cuenta' }}
+      </button>
+    </form>
+
+    <!-- Login Link -->
+    <div class="login-link">
+      ¿Ya tienes cuenta? 
+      <a href="#" (click)="navigateToLogin()">Inicia sesión aquí</a>
+    </div>
+  </div>
+</div>

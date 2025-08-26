@@ -1,0 +1,54 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <h1 class="login-title">Iniciar Sesión</h1>
+      <p class="login-subtitle">Ingresa tus credenciales para continuar</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Username Field -->
+      <div class="form-group">
+        <label class="form-label" for="username">Usuario</label>
+        <input type="text" id="username" formControlName="username" class="form-input" placeholder="Ingresa tu usuario"
+          [class.error]="username?.invalid && username?.touched">
+        <div *ngIf="username?.invalid && username?.touched" class="error-text">
+          <span *ngIf="username?.errors?.['required']">El usuario es requerido</span>
+          <span *ngIf="username?.errors?.['minlength']">El usuario debe tener al menos 3 caracteres</span>
+        </div>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label class="form-label" for="password">Contraseña</label>
+        <div class="password-container">
+          <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password" class="form-input"
+            placeholder="Ingresa tu contraseña" [class.error]="password?.invalid && password?.touched">
+          <button type="button" class="password-toggle" (click)="togglePasswordVisibility()">
+            {{ showPassword ? '🙈' : '👁️' }}
+          </button>
+        </div>
+        <div *ngIf="password?.invalid && password?.touched" class="error-text">
+          <span *ngIf="password?.errors?.['required']">La contraseña es requerida</span>
+          <span *ngIf="password?.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres</span>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="login-button" [disabled]="loginForm.invalid || isLoading">
+        <span *ngIf="isLoading" class="spinner"></span>
+        {{ isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
+      </button>
+    </form>
+
+    <!-- Register Link -->
+    <div class="register-link">
+      ¿No tienes cuenta?
+      <a href="#" (click)="navigateToRegister()">Regístrate aquí</a>
+    </div>
+  </div>
+</div>
