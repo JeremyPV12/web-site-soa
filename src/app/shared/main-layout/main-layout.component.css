@@ -1,0 +1,10 @@
+.main-container {
+  min-height: calc(100vh - 100px);
+  padding: 1rem;
+}
+
+.content {
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 1rem;
+}
