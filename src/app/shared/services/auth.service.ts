@@ -46,11 +46,9 @@ export class AuthService {
       password
     }).pipe(
       tap(response => {
-        // Guardar en localStorage
         localStorage.setItem('token', response.token);
         localStorage.setItem('user', JSON.stringify(response));
         
-        // Actualizar el subject
         this.currentUserSubject.next({
           _id: response._id,
           username: response.username,
@@ -66,11 +64,9 @@ export class AuthService {
   register(userData: RegisterRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${API_URL}auth/register`, userData).pipe(
       tap(response => {
-        // Guardar en localStorage
         localStorage.setItem('token', response.token);
         localStorage.setItem('user', JSON.stringify(response));
         
-        // Actualizar el subject
         this.currentUserSubject.next({
           _id: response._id,
           username: response.username,
@@ -113,7 +109,7 @@ export class AuthService {
       const currentTime = Math.floor(Date.now() / 1000);
       return payload.exp < currentTime;
     } catch (error) {
-      return true; // Si no se puede decodificar, consideramos que está expirado
+      return true;
     }
   }
 
@@ -122,10 +118,8 @@ export class AuthService {
     let errorMessage = 'Ha ocurrido un error inesperado';
 
     if (error.error instanceof ErrorEvent) {
-      // Error del cliente o de red
       errorMessage = `Error: ${error.error.message}`;
     } else {
-      // Error del servidor
       switch (error.status) {
         case 400:
           errorMessage = error.error?.message || 'Datos inválidos';
