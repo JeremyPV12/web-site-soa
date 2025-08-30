@@ -1,0 +1,139 @@
+<div class="modal-overlay" (click)="closeModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h2 class="product-title">{{ product.name }}</h2>
+          <button class="close-btn" (click)="closeModal()">
+            <span class="close-icon">×</span>
+          </button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="modal-body">
+          <!-- Product Images Section -->
+          <div class="images-section">
+            <div class="main-image-container">
+              <img [src]="selectedImage" [alt]="product.name" class="main-image">
+              <div *ngIf="hasDiscount()" class="discount-badge">
+                -{{ getDiscountPercentage() }}%
+              </div>
+              <div class="stock-indicator">
+                <span 
+                  class="stock-badge"
+                  [ngClass]="{
+                    'in-stock': product.stock > 0,
+                    'out-of-stock': product.stock <= 0,
+                    'low-stock': product.stock <= 5 && product.stock > 0
+                  }">
+                  {{ getStockText() }}
+                </span>
+              </div>
+            </div>
+            
+            <!-- Thumbnail Images -->
+            <div *ngIf="product.images.length > 1" class="thumbnails-container">
+              <button 
+                *ngFor="let image of product.images" 
+                class="thumbnail-btn"
+                [class.active]="selectedImage === image"
+                (click)="selectImage(image)">
+                <img [src]="image" [alt]="product.name" class="thumbnail-image">
+              </button>
+            </div>
+          </div>
+
+          <!-- Product Info Section -->
+          <div class="info-section">
+            <!-- Store and Category -->
+            <div class="product-meta">
+              <div class="store-info">
+                <span class="label">Vendido por:</span>
+                <span class="store-name">{{ formatStoreName(product.storeName) }}</span>
+              </div>
+              <div class="category-info">
+                <span class="category-chip">{{ product.categoryName }}</span>
+                <span *ngIf="product.brandName" class="brand-chip">{{ product.brandName }}</span>
+              </div>
+            </div>
+
+            <!-- Price Section -->
+            <div class="price-section">
+              <div *ngIf="hasDiscount()" class="price-with-discount">
+                <span class="original-price">S/. {{ product.price | number:'1.2-2' }}</span>
+                <span class="current-price">S/. {{ product.priceDiscount | number:'1.2-2' }}</span>
+              </div>
+              <div *ngIf="!hasDiscount()" class="price-normal">
+                <span class="current-price">S/. {{ product.price | number:'1.2-2' }}</span>
+              </div>
+            </div>
+
+            <!-- Description -->
+            <div class="description-section">
+              <h3 class="section-title">Descripción del producto</h3>
+              <p class="description-text">{{ product.description }}</p>
+            </div>
+
+            <!-- Specifications -->
+            <div class="specs-section">
+              <h3 class="section-title">Especificaciones generales</h3>
+              <div class="specs-grid">
+                <div class="spec-item">
+                  <span class="spec-label">Stock disponible:</span>
+                  <span class="spec-value">{{ product.stock }} unidades</span>
+                </div>
+                <div *ngIf="product.brandName" class="spec-item">
+                  <span class="spec-label">Marca:</span>
+                  <span class="spec-value">{{ product.brandName }}</span>
+                </div>
+                <div class="spec-item">
+                  <span class="spec-label">Categoría:</span>
+                  <span class="spec-value">{{ product.categoryName }}</span>
+                </div>
+                <div class="spec-item">
+                  <span class="spec-label">Tienda:</span>
+                  <span class="spec-value">{{ formatStoreName(product.storeName) }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quantity and Add to Cart -->
+            <div class="actions-section">
+              <div class="quantity-selector">
+                <label class="quantity-label">Cantidad:</label>
+                <div class="quantity-controls">
+                  <button 
+                    class="quantity-btn" 
+                    (click)="decreaseQuantity()"
+                    [disabled]="selectedQuantity <= 1">
+                    -
+                  </button>
+                  <span class="quantity-display">{{ selectedQuantity }}</span>
+                  <button 
+                    class="quantity-btn" 
+                    (click)="increaseQuantity()"
+                    [disabled]="selectedQuantity >= product.stock || isOutOfStock()">
+                    +
+                  </button>
+                </div>
+              </div>
+
+              <div class="cart-actions">
+                <button 
+                  class="add-to-cart-btn"
+                  [disabled]="isOutOfStock()"
+                  [class.disabled]="isOutOfStock()"
+                  (click)="addToCart()">
+                  <span class="cart-icon">🛒</span>
+                  {{ isOutOfStock() ? 'Producto Agotado' : 'Agregar al carrito' }}
+                </button>
+                
+                <div class="total-price">
+                  <span class="total-label">Total:</span>
+                  <span class="total-amount">S/. {{ getTotalPrice() | number:'1.2-2' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

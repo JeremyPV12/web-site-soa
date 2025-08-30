@@ -1,1 +1,138 @@
-<p>main-page-client works!</p>
+<div class="catalog-container">
+  <!-- Header con filtros compactos -->
+  <div class="header-section">
+    <div class="search-container">
+      <div class="search-box">
+        <input type="text" [(ngModel)]="searchTerm" placeholder="Buscar productos..." class="search-input"
+          (keyup.enter)="applyFilters()">
+        <button class="search-btn" (click)="applyFilters()">
+          <span class="search-icon">🔍</span>
+        </button>
+      </div>
+
+      <div class="quick-filters">
+        <select [(ngModel)]="selectedCategory" (change)="applyFilters()" class="filter-select">
+          <option value="">Todas las categorías</option>
+          <option *ngFor="let category of uniqueCategories" [value]="category">{{ category }}</option>
+        </select>
+
+        <div class="price-range">
+          <input type="number" [(ngModel)]="minPrice" placeholder="Min" class="price-input"
+            (keyup.enter)="applyFilters()">
+          <span class="price-separator">-</span>
+          <input type="number" [(ngModel)]="maxPrice" placeholder="Max" class="price-input"
+            (keyup.enter)="applyFilters()">
+        </div>
+
+        <button class="clear-btn" (click)="clearFilters()">Limpiar</button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-section">
+    <div class="spinner"></div>
+    <p>Cargando productos...</p>
+  </div>
+
+  <div *ngIf="error && !loading" class="error-section">
+    <p>{{ error }}</p>
+    <button class="retry-btn" (click)="obtenerListadoProductos()">Reintentar</button>
+  </div>
+
+  <!-- Secciones de productos -->
+  <div *ngIf="!loading && !error" class="catalog-content">
+    <div *ngFor="let section of productSections" class="product-section">
+      <div class="section-header">
+        <div class="section-title-container">
+          <h2 class="section-title">{{ section.title }}</h2>
+          <div *ngIf="section.storeName" class="store-indicator">
+            <span class="store-icon">🏪</span>
+          </div>
+        </div>
+
+        <div class="section-actions">
+          <button *ngIf="section.showAll" class="see-all-btn" (click)="verTodosProductos(section)">
+            Ver todos los productos
+          </button>
+          <button *ngIf="section.storeName" class="visit-store-btn" (click)="navigateToStore(section.storeName!)">
+            Visitar tienda
+          </button>
+        </div>
+      </div>
+
+      <!-- Grid de productos de la sección -->
+      <div class="products-carousel">
+        <div class="products-wrapper">
+          <div *ngFor="let product of section.products" class="product-card" (click)="openProductDetail(product)">
+            <!-- Stock indicator -->
+            <div class="stock-indicator">
+              <span class="stock-badge" [ngClass]="{
+                  'in-stock': product.stock > 0,
+                  'out-of-stock': product.stock <= 0
+                }">
+                {{ product.stock > 0 ? 'En stock' : 'Agotado' }}
+              </span>
+            </div>
+
+            <!-- Product image -->
+            <div class="product-image-container">
+              <img [src]="getMainImage(product)" [alt]="product.name" class="product-image">
+              <div *ngIf="hasDiscount(product)" class="discount-overlay">
+                <span class="discount-text">-{{ getDiscountPercentage(product) }}%</span>
+              </div>
+            </div>
+
+            <!-- Product info -->
+            <div class="product-details">
+              <h3 class="product-name">{{ product.name }}</h3>
+              <p class="product-description">{{ product.description }}</p>
+
+              <div class="product-meta">
+                <span class="product-category">{{ product.categoryName }}</span>
+                <span *ngIf="product.brandName" class="product-brand">{{ product.brandName }}</span>
+              </div>
+
+              <!-- Price -->
+              <div class="price-container">
+                <div *ngIf="hasDiscount(product)" class="price-with-discount">
+                  <span class="original-price">S/. {{ product.price | number:'1.2-2' }}</span>
+                  <span class="current-price">S/. {{ product.priceDiscount | number:'1.2-2' }}</span>
+                </div>
+                <div *ngIf="!hasDiscount(product)" class="price-normal">
+                  <span class="current-price">S/. {{ product.price | number:'1.2-2' }}</span>
+                </div>
+              </div>
+
+              <!-- Actions -->
+              <div class="product-actions">
+                <button class="add-to-cart-btn" [disabled]="isOutOfStock(product)"
+                  [class.disabled]="isOutOfStock(product)" [class.in-cart]="isInCart(product)"
+                  (click)="addToCart(product, $event)">
+                  <span class="cart-icon">{{ isInCart(product) ? '✓' : '🛒' }}</span>
+                  {{ isOutOfStock(product) ? 'Agotado' : (isInCart(product) ? 'En carrito (' + getCartQuantity(product)
+                  + ')' : 'Agregar al carrito') }}
+                </button>
+                <button class="view-details-btn" (click)="openProductDetail(product); $event.stopPropagation()">
+                  Ver detalles
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="productSections.length === 0" class="no-results">
+      <div class="no-results-content">
+        <div class="no-results-icon">📦</div>
+        <h3>No se encontraron productos</h3>
+        <p>Intenta ajustar los filtros de búsqueda</p>
+        <button class="clear-filters-btn" (click)="clearFilters()">Limpiar filtros</button>
+      </div>
+    </div>
+  </div>
+
+  <app-product-detail *ngIf="showProductDetail && selectedProduct" [product]="selectedProduct"
+    (closeDetail)="closeProductDetail()">
+  </app-product-detail>
+</div>
