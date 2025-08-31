@@ -3,12 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import { Cart, CartItem, CartService } from '../../services/cart.service';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { OrderRequest } from '../../dtos/orderRequest';
+import { User } from '../../dtos/userDto';
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule],
+  imports: [CommonModule,RouterLink],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
@@ -18,14 +19,37 @@ export class HeaderComponent implements OnInit {
   authService: AuthService;
   router: Router;
   isLoading = false;
-
+  isOpen = false;
+  nameUser = ''
   constructor(private cartService: CartService, authService: AuthService, router: Router) {
     this.cart$ = this.cartService.getCart();
     this.authService = authService;
     this.router = router;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.verificLogin();
+    this.getProfile()
+    if (this.getProfile()) {
+      this.nameUser = this.getProfile()!.name[0]+this.getProfile()!.last_name[0]
+    }
+  }
+
+  closeSession():void{
+    this.authService.logout();
+  }
+
+  changeState():void{
+    this.isOpen = !this.isOpen
+  }
+
+  verificLogin():boolean{
+    return this.authService.isLoggedIn()
+  }
+
+  getProfile():User|null{
+    return this.authService.getCurrentUser()
+  }
 
   toggleCartDropdown(): void {
     this.showCartDropdown = !this.showCartDropdown;

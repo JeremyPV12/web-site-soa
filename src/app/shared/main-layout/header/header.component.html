@@ -27,6 +27,31 @@
             {{ (cart$ | async)?.totalItems }}
           </span>
         </button>
+        @if (!verificLogin()) {
+          <button 
+          routerLink="/login"
+          class="ml-6 px-3 py-2 border-2 rounded-xl text-white bg-dashboard-2 hover:bg-dashboard-1 cursor-pointer" >
+              <h4>Iniciar Sesion</h4>
+          </button>
+        }@else {
+            <button
+            (click)="changeState()"
+            class="ml-5 size-12 bg-dashboard-1 rounded-full relative" >
+              <h4 class="text-white uppercase text-lg">{{nameUser}}</h4>
+              <div *ngIf="isOpen" class="absolute border-slate-100 border-2 bg-white px-3 py-4 w-40 right-0 z-999 top-20 rounded-xl shadow-2xl">
+                <h4
+                class="text-lg text-dashboard-1"
+                routerLink="/profile"
+                >Ver perfil</h4>
+                <h4
+                class="text-lg text-red-500 hover:text-red-900 cursor-pointer"
+                (click)="closeSession()"
+                >Cerrar sesión </h4>
+              </div>
+            </button>
+
+        }
+        
 
         <!-- Cart Dropdown -->
         <div *ngIf="showCartDropdown"

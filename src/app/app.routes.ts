@@ -3,6 +3,7 @@ import { MainPageClientComponent } from './features/client/main-page-client/main
 import { MainLayoutComponent } from './shared/main-layout/main-layout.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
+import { AuthGuard, canActivateSignIn } from './shared/guards/auth-guard';
 
 export const routes: Routes = [
   {
@@ -13,7 +14,13 @@ export const routes: Routes = [
       { path: '', redirectTo: 'clientes', pathMatch: 'full' }
     ]
   },
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent }
+  { 
+    path: 'login',
+    canActivate: [canActivateSignIn],
+    component: LoginComponent 
+  },
+  { path: 'register',canActivate: [canActivateSignIn], component: RegisterComponent }
 ];
+
+
 

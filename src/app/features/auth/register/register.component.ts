@@ -60,12 +60,12 @@ export class RegisterComponent implements OnInit {
           this.successMessage = 'Cuenta creada exitosamente. Redirigiendo...';
           
           // Guardar token y datos del usuario
-          localStorage.setItem('token', response.token);
-          localStorage.setItem('user', JSON.stringify(response));
+         /*  localStorage.setItem('token', response.token);
+          localStorage.setItem('user', JSON.stringify(response)); */
           
           // Redireccionar después de un breve delay
           setTimeout(() => {
-            this.router.navigate(['/dashboard']);
+            this.router.navigate(['/login']);
           }, 1500);
         },
         error: (error) => {

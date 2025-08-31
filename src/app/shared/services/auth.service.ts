@@ -13,6 +13,7 @@ const API_URL = environment.apiMain;
   providedIn: 'root'
 })
 export class AuthService {
+
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
@@ -38,6 +39,7 @@ export class AuthService {
       }
     }
   }
+
 
   /** Iniciar sesión */
   login(username: string, password: string): Observable<AuthResponse> {
