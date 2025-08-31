@@ -5,16 +5,15 @@
     <div class="flex items-center space-x-8">
       <!-- Logo -->
       <div class="flex items-center space-x-2">
-        <img src="https://cdn-icons-png.flaticon.com/512/1828/1828884.png" alt="Logo" class="w-8 h-8" />
-        <span class="text-xs font-bold text-lime-400">MINIFALABELLA</span>
+        <img src="assets/images/logo.png" alt="Logo" class="logo" />
       </div>
       <!-- Menu -->
       <nav class="hidden md:flex space-x-6 font-medium">
-        <a href="#" class="hover:text-blue-600">Veterinaria</a>
-        <a href="#" class="hover:text-blue-600">Computacion</a>
-        <a href="#" class="hover:text-blue-600">Jardineria</a>
-        <a href="#" class="hover:text-blue-600">Polleria</a>
-        <a href="#" class="hover:text-blue-600">Hospedaje</a>
+        <a href="#" class="hover:text-blue-600">Veterinaria Tomy</a>
+        <a href="#" class="hover:text-blue-600">Inversiones Araujo</a>
+        <a href="#" class="hover:text-blue-600">Hotel Formula 1</a>
+        <a href="#" class="hover:text-blue-600">Polleria Rivera</a>
+        <a href="#" class="hover:text-blue-600">Fibertel</a>
       </nav>
     </div>
 
@@ -31,7 +30,7 @@
 
         <!-- Cart Dropdown -->
         <div *ngIf="showCartDropdown"
-          class="cart-dropdown absolute right-0 top-full mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+          class="cart-dropdown absolute right-0 top-full mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-999">
 
           <!-- Cart Header -->
           <div class="cart-header p-4 border-b border-gray-200">
@@ -101,12 +100,20 @@
             <div class="space-y-2">
               <button
                 class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors font-medium"
-                (click)="proceedToCheckout()">
-                Proceder al Checkout
+                (click)="proceedToCheckout()"
+                [disabled]="isLoading"
+              >
+                @if(isLoading){
+                  Creando pedido...
+                }@else {
+                  Proceder al Checkout
+                }
               </button>
               <button
                 class="w-full bg-gray-200 text-gray-700 py-2 rounded-md hover:bg-gray-300 transition-colors text-sm"
-                (click)="clearCart()">
+                (click)="clearCart()"
+                [disabled]="isLoading"
+              >
                 Vaciar Carrito
               </button>
             </div>

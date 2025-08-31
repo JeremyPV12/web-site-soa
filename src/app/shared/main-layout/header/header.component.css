@@ -35,3 +35,9 @@
 .cart-items::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
 }
+
+.logo {
+  width: 120px;
+  max-height: 40px;
+  object-fit: contain;
+}

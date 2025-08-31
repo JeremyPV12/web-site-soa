@@ -2,6 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Cart, CartItem, CartService } from '../../services/cart.service';
 import { Observable } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
+import { OrderRequest } from '../../dtos/orderRequest';
 
 @Component({
   selector: 'app-header',
@@ -12,9 +15,14 @@ import { Observable } from 'rxjs';
 export class HeaderComponent implements OnInit {
   cart$: Observable<Cart>;
   showCartDropdown = false;
+  authService: AuthService;
+  router: Router;
+  isLoading = false;
 
-  constructor(private cartService: CartService) {
+  constructor(private cartService: CartService, authService: AuthService, router: Router) {
     this.cart$ = this.cartService.getCart();
+    this.authService = authService;
+    this.router = router;
   }
 
   ngOnInit(): void {}
@@ -67,9 +75,46 @@ export class HeaderComponent implements OnInit {
   }
 
   proceedToCheckout(): void {
-    this.showCartDropdown = false;
-    // Aquí puedes implementar la navegación al checkout
-    console.log('Proceder al checkout');
-    alert('Funcionalidad de checkout en desarrollo');
+    if(!this.authService.isLoggedIn()) {
+      this.showCartDropdown = false;
+      alert('Debes iniciar sesión para proceder al checkout');
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    this.isLoading = true;
+    
+    // Subscribe to the cart$ observable to get the current cart value
+    const cartSubscription = this.cart$.subscribe(cart => {
+      if(cart.items.length === 0) {
+        this.isLoading = false;
+        return;
+      }
+
+      const request: OrderRequest = {
+        products: cart.items.map(item => ({
+          productId: item.product.id,
+          storeName: item.product.storeName,
+          quantity: item.quantity
+        }))
+      };
+
+      console.log(request);
+
+      this.cartService.createOrder(request).subscribe({
+        next: (order) => {
+          this.isLoading = false;
+          this.cartService.clearCart();
+          this.showCartDropdown = false;
+          this.router.navigate(['/orders']);
+          console.log(order);
+          cartSubscription.unsubscribe();
+        },
+        error: () => {
+          this.isLoading = false;
+          cartSubscription.unsubscribe();
+        }
+      });
+    });
   }
 }

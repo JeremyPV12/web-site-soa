@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Product } from './service.service';
+import { OrderRequest } from '../dtos/orderRequest';
+import { Order } from '../dtos/Order';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 export interface CartItem {
   product: Product;
@@ -14,6 +18,8 @@ export interface Cart {
   totalPrice: number;
 }
 
+const API_URL = environment.apiMain;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -25,8 +31,10 @@ export class CartService {
   });
 
   public cart$ = this.cartSubject.asObservable();
+  private http: HttpClient;
 
-  constructor() {
+  constructor(http: HttpClient) {
+    this.http = http;
     this.loadCartFromStorage();
   }
 
@@ -153,5 +161,11 @@ export class CartService {
       item.product.id === productId && item.product.storeName === storeName
     );
     return item ? item.quantity : 0;
+  }
+
+  createOrder(request: OrderRequest): Observable<Order> {
+    const token = localStorage.getItem('token');
+    const headers = { 'Authorization': `Bearer ${token}` };
+    return this.http.post<Order>(`${API_URL}orders`, request, { headers });
   }
 }
