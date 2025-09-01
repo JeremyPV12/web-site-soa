@@ -40,4 +40,5 @@
   width: 120px;
   max-height: 40px;
   object-fit: contain;
+  cursor: pointer;
 }

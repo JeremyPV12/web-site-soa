@@ -5,7 +5,10 @@
     <div class="flex items-center space-x-8">
       <!-- Logo -->
       <div class="flex items-center space-x-2">
-        <img src="assets/images/logo.png" alt="Logo" class="logo" />
+        <img 
+          src="assets/images/logo.png" alt="Logo" class="logo" 
+          (click)="goToHome()"
+        />
       </div>
       <!-- Menu -->
       <nav class="hidden md:flex space-x-6 font-medium">
@@ -41,8 +44,8 @@
               <div *ngIf="isOpen" class="absolute border-slate-100 border-2 bg-white px-3 py-4 w-40 right-0 z-999 top-20 rounded-xl shadow-2xl">
                 <h4
                 class="text-lg text-dashboard-1"
-                routerLink="/profile"
-                >Ver perfil</h4>
+                routerLink="/orders-client"
+                >Ver pedidos</h4>
                 <h4
                 class="text-lg text-red-500 hover:text-red-900 cursor-pointer"
                 (click)="closeSession()"
