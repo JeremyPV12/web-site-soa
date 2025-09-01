@@ -8,7 +8,8 @@ import { AdminLayoutComponent } from './shared/admin-layout/admin-layout.compone
 import { AdminLoginComponent } from './features/auth/admin-login/admin-login.component';
 import { DashboardComponent } from './shared/admin/dashboard/dashboard.component';
 import { OrderComponent } from './shared/admin/order/order.component';
-import { AuthAdminGuard, AuthGuard, canActivateSignIn } from './shared/guards/auth-admin.guard';
+import { AuthAdminGuard } from './shared/guards/auth-admin.guard';
+import { canActivateSignIn, AuthGuard } from './shared/guards/auth-guard';
 
 export const routes: Routes = [
   {
@@ -35,4 +36,8 @@ export const routes: Routes = [
       { path: 'order', component: OrderComponent },
     ],
   },
+  {
+    path: 'admin-login',
+    component: AdminLoginComponent,
+  }
 ];
