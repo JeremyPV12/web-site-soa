@@ -19,7 +19,7 @@ export class ProductDetailComponent implements OnInit {
   constructor(private cartService: CartService) {}
 
   ngOnInit(): void {
-    this.selectedImage = this.product.images?.[0] || '';
+    this.selectedImage = this.product.images?.[0] || '/assets/images/no-image.png';
   }
 
   selectImage(image: string): void {

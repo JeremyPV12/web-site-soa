@@ -18,10 +18,10 @@
         <div class="flex-row">
           <p class="text-blue-600 font-semibold">Total : S/. {{ parent.total | number:'1.2-2' }}</p>
           <div 
-            [class]="`badge ${orderStatus.isDelivered && orderStatus.orderId === parent.id ? 'delivered' : 'pending'}`"
+            [class]="`badge ${findOrderStatus(parent.id).isDelivered ? 'delivered' : 'pending'}`"
             
           >
-            @if(orderStatus.isDelivered && orderStatus.orderId === parent.id) {
+            @if(findOrderStatus(parent.id).isDelivered) {
               Entregado
             }@else {
               Pendiente
