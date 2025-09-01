@@ -9,7 +9,7 @@ export interface ParentOrder {
 export interface ChildOrder {
   idOrder: string;
   date: string;
-  status: string;
+  status: "PENDIENTE" | "ENTREGADO";
   total: number;
   products: Product[];
 }

@@ -105,6 +105,10 @@ export class HeaderComponent implements OnInit {
     }
   }
 
+  goToHome(): void {
+    this.router.navigate(['/clientes']);
+  }
+
   proceedToCheckout(): void {
     if(!this.authService.isLoggedIn()) {
       this.showCartDropdown = false;
@@ -136,7 +140,7 @@ export class HeaderComponent implements OnInit {
           this.isLoading = false;
           this.cartService.clearCart();
           this.showCartDropdown = false;
-          this.router.navigate(['/orders']);
+          this.router.navigate(['/orders-client']);
           console.log(order);
           cartSubscription.unsubscribe();
         },

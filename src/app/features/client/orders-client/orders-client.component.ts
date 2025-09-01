@@ -14,6 +14,7 @@ export class OrdersClientComponent implements OnInit {
   parentOrders: ParentOrder[] = [];
   isDetailsOpen: { [key: string]: boolean } = {};
   loading = true;
+  orderStatus: {orderId: string, isDelivered: boolean} = {orderId: "", isDelivered: false};
 
   constructor(private ordersService: OrderClientService) {}
 
@@ -22,6 +23,17 @@ export class OrdersClientComponent implements OnInit {
       next: (data) => {
         console.log('Órdenes finales:', data);
         this.parentOrders = data;
+        data.forEach(order => {
+          const pendingOrders = order.orders.filter(order => order.status.toLowerCase() === "pendiente");
+          console.log(pendingOrders);
+          console.log(order.orders);
+          if(pendingOrders.length > 0){
+            this.orderStatus = {orderId: order.id, isDelivered: false};
+          }else{
+            this.orderStatus = {orderId: order.id, isDelivered: true};
+          }
+        });
+        
         this.loading = false;
       },
       error: (err) => {

@@ -15,7 +15,19 @@
       <div class="border-b pb-4 mb-4">
         <h2 class="text-xl font-semibold text-gray-800">Orden #{{ parent.id }}</h2>
         <p class="text-sm text-gray-600">Fecha pedido: {{ parent.createdAt | date:'yyyy-MM-dd' }}</p>
-        <p class="text-blue-600 font-semibold">Total : S/. {{ parent.total | number:'1.2-2' }}</p>
+        <div class="flex-row">
+          <p class="text-blue-600 font-semibold">Total : S/. {{ parent.total | number:'1.2-2' }}</p>
+          <div 
+            [class]="`badge ${orderStatus.isDelivered && orderStatus.orderId === parent.id ? 'delivered' : 'pending'}`"
+            
+          >
+            @if(orderStatus.isDelivered && orderStatus.orderId === parent.id) {
+              Entregado
+            }@else {
+              Pendiente
+            }
+          </div>
+        </div>
       </div>
 
       <!-- LISTA DE SUB ORDENES -->
@@ -42,8 +54,8 @@
             <div *ngFor="let product of order.products" class="border rounded-lg p-3">
               <p class="font-medium">{{ product.name }}</p>
               <p>Cantidad: {{ product.quantity }}</p>
-              <p>Precio: ${{ product.unitPrice }}</p>
-              <p>Subtotal: ${{ product.subtotal }}</p>
+              <p>Precio: S/. {{ product.unitPrice }}</p>
+              <p>Subtotal: S/. {{ product.subtotal }}</p>
             </div>
           </div>
             </div>
