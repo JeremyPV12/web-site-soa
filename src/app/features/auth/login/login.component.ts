@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../shared/services/auth.service';
 import { NgIf } from '@angular/common';
 
@@ -8,7 +8,7 @@ import { NgIf } from '@angular/common';
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  imports: [NgIf, ReactiveFormsModule]
+  imports: [NgIf, ReactiveFormsModule,RouterLink]
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
@@ -53,7 +53,7 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('token', response.token);
           localStorage.setItem('user', JSON.stringify(response));
           
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/']);
         },
         error: (error) => {
           this.isLoading = false;

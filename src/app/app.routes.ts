@@ -1,3 +1,4 @@
+import { OrdersClientComponent } from './features/client/orders-client/orders-client.component';
 import { Routes } from '@angular/router';
 import { MainPageClientComponent } from './features/client/main-page-client/main-page-client.component';
 import { MainLayoutComponent } from './shared/main-layout/main-layout.component';
@@ -7,7 +8,7 @@ import { AdminLayoutComponent } from './shared/admin-layout/admin-layout.compone
 import { AdminLoginComponent } from './features/auth/admin-login/admin-login.component';
 import { DashboardComponent } from './shared/admin/dashboard/dashboard.component';
 import { OrderComponent } from './shared/admin/order/order.component';
-import { AuthAdminGuard } from './shared/guards/auth-admin.guard';
+import { AuthAdminGuard, AuthGuard, canActivateSignIn } from './shared/guards/auth-admin.guard';
 
 export const routes: Routes = [
   {
@@ -15,13 +16,16 @@ export const routes: Routes = [
     component: MainLayoutComponent,
     children: [
       { path: 'clientes', component: MainPageClientComponent },
-      { path: '', redirectTo: 'clientes', pathMatch: 'full' },
-    ],
+      { path: 'orders-client', component: OrdersClientComponent },
+      { path: '', redirectTo: 'clientes', pathMatch: 'full' }
+    ]
   },
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'admin/login', component: AdminLoginComponent },
-
+  { 
+    path: 'login',
+    canActivate: [canActivateSignIn],
+    component: LoginComponent 
+  },
+  { path: 'register',canActivate: [canActivateSignIn], component: RegisterComponent },
   {
     path: 'admin',
     component: AdminLayoutComponent,

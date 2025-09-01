@@ -5,16 +5,15 @@
     <div class="flex items-center space-x-8">
       <!-- Logo -->
       <div class="flex items-center space-x-2">
-        <img src="https://cdn-icons-png.flaticon.com/512/1828/1828884.png" alt="Logo" class="w-8 h-8" />
-        <span class="text-xs font-bold text-lime-400">MINIFALABELLA</span>
+        <img src="assets/images/logo.png" alt="Logo" class="logo" />
       </div>
       <!-- Menu -->
       <nav class="hidden md:flex space-x-6 font-medium">
-        <a href="#" class="hover:text-blue-600">Veterinaria</a>
-        <a href="#" class="hover:text-blue-600">Computacion</a>
-        <a href="#" class="hover:text-blue-600">Jardineria</a>
-        <a href="#" class="hover:text-blue-600">Polleria</a>
-        <a href="#" class="hover:text-blue-600">Hospedaje</a>
+        <a (click)="scrollTo('veterinaria_tomy')" class="hover:text-blue-600 transition-colors duration-300 cursor-pointer">Veterinaria Tomy</a>
+        <a (click)="scrollTo('INVERSIONES_ARAUJO')" class="hover:text-blue-600 transition-colors duration-300 cursor-pointer">Inversiones Araujo</a>
+        <a (click)="scrollTo('Hotel_Formula_1')" class="hover:text-blue-600 transition-colors duration-300 cursor-pointer">Hotel Formula 1</a>
+        <a (click)="scrollTo('polleria')" class="hover:text-blue-600 transition-colors duration-300 cursor-pointer">Polleria Rivera</a>
+        <a (click)="scrollTo('Fibertel')" class="hover:text-blue-600 transition-colors duration-300 cursor-pointer">Fibertel</a>
       </nav>
     </div>
 
@@ -28,10 +27,35 @@
             {{ (cart$ | async)?.totalItems }}
           </span>
         </button>
+        @if (!verificLogin()) {
+          <button 
+          routerLink="/login"
+          class="ml-6 px-3 py-2 border-2 rounded-xl text-white bg-dashboard-2 hover:bg-dashboard-1 cursor-pointer" >
+              <h4>Iniciar Sesion</h4>
+          </button>
+        }@else {
+            <button
+            (click)="changeState()"
+            class="ml-5 size-12 bg-dashboard-1 rounded-full relative" >
+              <h4 class="text-white uppercase text-lg">{{nameUser}}</h4>
+              <div *ngIf="isOpen" class="absolute border-slate-100 border-2 bg-white px-3 py-4 w-40 right-0 z-999 top-20 rounded-xl shadow-2xl">
+                <h4
+                class="text-lg text-dashboard-1"
+                routerLink="/profile"
+                >Ver perfil</h4>
+                <h4
+                class="text-lg text-red-500 hover:text-red-900 cursor-pointer"
+                (click)="closeSession()"
+                >Cerrar sesión </h4>
+              </div>
+            </button>
+
+        }
+        
 
         <!-- Cart Dropdown -->
         <div *ngIf="showCartDropdown"
-          class="cart-dropdown absolute right-0 top-full mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+          class="cart-dropdown absolute right-0 top-full mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-999">
 
           <!-- Cart Header -->
           <div class="cart-header p-4 border-b border-gray-200">
@@ -101,12 +125,20 @@
             <div class="space-y-2">
               <button
                 class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors font-medium"
-                (click)="proceedToCheckout()">
-                Proceder al Checkout
+                (click)="proceedToCheckout()"
+                [disabled]="isLoading"
+              >
+                @if(isLoading){
+                  Creando pedido...
+                }@else {
+                  Proceder al Checkout
+                }
               </button>
               <button
                 class="w-full bg-gray-200 text-gray-700 py-2 rounded-md hover:bg-gray-300 transition-colors text-sm"
-                (click)="clearCart()">
+                (click)="clearCart()"
+                [disabled]="isLoading"
+              >
                 Vaciar Carrito
               </button>
             </div>
