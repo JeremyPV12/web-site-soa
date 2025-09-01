@@ -9,7 +9,7 @@ import { AdminLoginComponent } from './features/auth/admin-login/admin-login.com
 import { DashboardComponent } from './shared/admin/dashboard/dashboard.component';
 import { OrderComponent } from './shared/admin/order/order.component';
 import { AuthAdminGuard } from './shared/guards/auth-admin.guard';
-import { canActivateSignIn, AuthGuard } from './shared/guards/auth-guard';
+import { canActivateSignIn } from './shared/guards/auth-guard';
 
 export const routes: Routes = [
   {
