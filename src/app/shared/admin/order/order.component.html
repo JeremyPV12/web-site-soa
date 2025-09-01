@@ -1,0 +1,275 @@
+<div class="min-h-screen bg-gray-50 p-6">
+  <div class="max-w-6xl mx-auto">
+    <!-- Header -->
+    <div class="mb-6 sm:mb-8 text-start">
+      <h1 class="text-xl sm:text-3xl font-bold text-gray-900 mb-2">
+        Visualización de los Pedidos
+      </h1>
+      <p class="text-gray-600 text-sm sm:text-base">
+        Visualiza todas los pedidos de la empresa
+      </p>
+    </div>
+
+    <!-- Carga -->
+    <div *ngIf="loading" class="flex justify-center items-center py-12">
+      <div
+        class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"
+      ></div>
+      <span class="ml-3 text-gray-600">Cargando órdenes...</span>
+    </div>
+
+    <!-- Mensaje de error -->
+    <div
+      *ngIf="error && !loading"
+      class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg mb-6"
+    >
+      <div class="flex items-center">
+        <svg
+          class="w-5 h-5 text-red-500 mr-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          ></path>
+        </svg>
+        <span class="text-red-700">{{ error }}</span>
+      </div>
+      <button
+        (click)="loadOrders()"
+        class="mt-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+      >
+        Reintentar
+      </button>
+    </div>
+
+    <!-- Mensaje cuando no hay órdenes -->
+    <div
+      *ngIf="!loading && !error && orders.length === 0"
+      class="text-center py-12"
+    >
+      <svg
+        class="w-16 h-16 text-gray-300 mx-auto mb-4"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-16"
+        ></path>
+      </svg>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">No hay órdenes</h3>
+      <p class="text-gray-600 mb-4">No se encontraron órdenes en el sistema.</p>
+      <button
+        (click)="loadOrders()"
+        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+      >
+        Refrescar
+      </button>
+    </div>
+    <!-- Orders -->
+    <div
+      *ngIf="!loading && !error"
+      class="grid grid-cols-1 lg:grid-cols-2 gap-6"
+    >
+      <div
+        *ngFor="let order of orders"
+        class="bg-white rounded-lg shadow-sm border border-gray-300 hover:shadow-md transition-all duration-200 flex flex-col h-full"
+      >
+        <div class="p-4 border-b border-gray-100">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center space-x-2">
+              <span
+                class="text-xs sm:text-sm font-medium text-gray-500 bg-gray-100 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded"
+              >
+                ID: {{ getShortOrderId(order.id) }}
+              </span>
+              <span
+                class="text-xs sm:text-sm font-medium text-gray-500 bg-blue-100 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded"
+              >
+                User: {{ getShortUserId(order.userId) }}
+              </span>
+            </div>
+            <span
+              class="text-[12px] px-2 py-0.5 sm:px-3 sm:py-1 rounded-full font-medium border"
+              [class]="getStatusColor(order.overallStatus || '')"
+            >
+              {{ order.overallStatus }}
+            </span>
+          </div>
+
+          <div class="mt-2">
+            <p class="text-sm font-medium text-gray-900">
+              {{ order.user?.name }} {{ order.user?.last_name }}
+            </p>
+            <p class="text-xs text-gray-500">{{ order.user?.username }}</p>
+          </div>
+        </div>
+
+        <div class="p-4 flex-1">
+          <div
+            class="flex items-center justify-between mb-4 p-3 bg-gray-50 rounded-lg"
+          >
+            <div class="text-center">
+              <p class="text-lg font-bold text-gray-900">
+                {{ order.orders.length }}
+              </p>
+              <p class="text-xs text-gray-500">Items</p>
+            </div>
+            <div class="text-center">
+              <p class="text-lg font-bold text-green-600">
+                {{ formatCurrency(getTotalOrderAmount(order)) }}
+              </p>
+              <p class="text-xs text-gray-500">Total del Pedido</p>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <h4 class="text-sm font-medium text-gray-700 mb-2">
+              Detalles de los Pedidos
+            </h4>
+
+            <div
+              *ngIf="order.orders.length === 0"
+              class="text-center py-3 bg-gray-50 rounded-lg"
+            >
+              <p class="text-sm text-gray-500">No hay items en esta orden</p>
+            </div>
+
+            <div
+              *ngFor="let item of order.orders"
+              class="border border-gray-200 rounded-lg p-3"
+            >
+              <div class="flex items-center justify-between mb-2">
+                <div>
+                  <h5
+                    class="text-xs sm:text-sm font-semibold uppercase text-gray-900"
+                  >
+                    {{ item.storeName }}
+                  </h5>
+                  <p class="text-xs text-gray-500">
+                    Pedido #{{ item.orderId }}
+                  </p>
+                </div>
+                <span
+                  class="text-sm px-2 py-1 rounded uppercase bg-blue-100 text-blue-800"
+                >
+                  {{ item.orderDetails?.status || "Pendiente" }}
+                </span>
+              </div>
+
+              <div
+                *ngIf="item.orderDetails"
+                class="mb-1 sm:mb-2 flex justify-between font-semibold"
+              >
+                <p class="text-xs sm:text-sm font-medium text-gray-900">
+                  Total:
+                </p>
+                <span class="text-xs sm:text-sm">
+                  {{ formatCurrency(item.orderDetails.total) }}
+                </span>
+              </div>
+
+              <div
+                *ngIf="
+                  item.orderDetails &&
+                  item.orderDetails.orderDetails &&
+                  item.orderDetails.orderDetails.length > 0
+                "
+                class="mt-2"
+              >
+                <h6 class="text-xs font-medium text-gray-700 mb-1">
+                  Productos:
+                </h6>
+                <div class="space-y-1">
+                  <div
+                    *ngFor="let product of item.orderDetails.orderDetails"
+                    class="text-sm text-gray-600 bg-gray-50 p-2 rounded"
+                  >
+                    <div class="flex justify-between items-start">
+                      <span class="font-medium">{{ product.productName }}</span>
+                      <span class="text-green-600">{{
+                        formatCurrency(product.subtotal)
+                      }}</span>
+                    </div>
+                    <div
+                      class="flex justify-between text-sm text-gray-500 mt-1"
+                    >
+                      <span>{{ product.quantity }} unidades</span>
+                      <span>{{ formatCurrency(product.price) }} c/u</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                *ngIf="
+                  item.orderDetails &&
+                  (!item.orderDetails.orderDetails ||
+                    item.orderDetails.orderDetails.length === 0)
+                "
+                class="text-center py-2 bg-yellow-50 rounded"
+              >
+                <p class="text-xs text-yellow-700">
+                  No hay productos en este pedido
+                </p>
+              </div>
+
+              <div *ngIf="!item.orderDetails" class="text-center py-2">
+                <div class="animate-pulse flex space-x-1 justify-center">
+                  <div class="h-1 w-1 bg-gray-300 rounded-full"></div>
+                  <div class="h-1 w-1 bg-gray-300 rounded-full"></div>
+                  <div class="h-1 w-1 bg-gray-300 rounded-full"></div>
+                </div>
+                <p class="text-xs text-gray-500 mt-1">Cargando detalles...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="p-4 bg-gray-50 rounded-b-lg border-t border-gray-200 mt-auto"
+        >
+          <div class="text-center text-sm text-gray-700">
+            Fecha: {{ getOrderDate(order.createdAt) }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vacio -->
+    <div
+      *ngIf="!loading && !error && orders.length === 0"
+      class="text-center py-12"
+    >
+      <svg
+        class="w-16 h-16 text-gray-300 mx-auto mb-4"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-16"
+        ></path>
+      </svg>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">No hay órdenes</h3>
+      <p class="text-gray-600 mb-4">No se encontraron órdenes en el sistema.</p>
+      <button
+        (click)="loadOrders()"
+        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+      >
+        Refrescar
+      </button>
+    </div>
+  </div>
+</div>

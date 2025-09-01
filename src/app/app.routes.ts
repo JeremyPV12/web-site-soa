@@ -4,7 +4,11 @@ import { MainPageClientComponent } from './features/client/main-page-client/main
 import { MainLayoutComponent } from './shared/main-layout/main-layout.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
-import { AuthGuard, canActivateSignIn } from './shared/guards/auth-guard';
+import { AdminLayoutComponent } from './shared/admin-layout/admin-layout.component';
+import { AdminLoginComponent } from './features/auth/admin-login/admin-login.component';
+import { DashboardComponent } from './shared/admin/dashboard/dashboard.component';
+import { OrderComponent } from './shared/admin/order/order.component';
+import { AuthAdminGuard, AuthGuard, canActivateSignIn } from './shared/guards/auth-admin.guard';
 
 export const routes: Routes = [
   {
@@ -21,8 +25,14 @@ export const routes: Routes = [
     canActivate: [canActivateSignIn],
     component: LoginComponent 
   },
-  { path: 'register',canActivate: [canActivateSignIn], component: RegisterComponent }
+  { path: 'register',canActivate: [canActivateSignIn], component: RegisterComponent },
+  {
+    path: 'admin',
+    component: AdminLayoutComponent,
+    canActivate: [AuthAdminGuard],
+    children: [
+      { path: '', component: DashboardComponent },
+      { path: 'order', component: OrderComponent },
+    ],
+  },
 ];
-
-
-
