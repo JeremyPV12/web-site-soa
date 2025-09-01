@@ -93,8 +93,8 @@ export class MainPageClientComponent implements OnInit {
     if (productsWithDiscount.length > 0) {
       this.productSections.push({
         title: 'Descuentos',
-        products: productsWithDiscount.slice(0, 6),
-        showAll: productsWithDiscount.length > 6
+        products: productsWithDiscount.slice(0, 8),
+        showAll: productsWithDiscount.length > 8
       });
     }
 
@@ -104,9 +104,9 @@ export class MainPageClientComponent implements OnInit {
       const storeProducts = storeGroups[storeName];
       this.productSections.push({
         title: this.formatStoreName(storeName),
-        products: storeProducts.slice(0, 5),
+        products: storeProducts.slice(0, 8),
         storeName: storeName,
-        showAll: storeProducts.length > 5
+        showAll: storeProducts.length > 8
       });
     });
   }
@@ -164,10 +164,24 @@ export class MainPageClientComponent implements OnInit {
     // Capitalizar y formatear nombres de tienda
     const nameMap: { [key: string]: string } = {
       'Fibertel': 'Fibertel',
-      'polleria': 'Pollería',
-      'veterinaria_tomy': 'Veterinaria Tomy'
+      'polleria': 'Pollería Rivera',
+      'veterinaria_tomy': 'Veterinaria Tomy',
+      "INVERSIONES_ARAUJO": "Inversiones Araujo",
+      "Hotel_Formula_1": "Hotel Formula 1"
     };
     return nameMap[storeName] || storeName.charAt(0).toUpperCase() + storeName.slice(1);
+  }
+
+  getStoreLogo(storeName: string): string {
+    const logoMap: { [key: string]: string } = {
+      'Fibertel': '/assets/images/fibertel-logo.png',
+      'polleria': '/assets/images/polleria-logo.png',
+      'veterinaria_tomy': '/assets/images/veterinaria-logo.png',
+      "INVERSIONES_ARAUJO": "/assets/images/inversiones-logo.png",
+      "Hotel_Formula_1": "/assets/images/hotel_formula-logo.png",
+      "Descuentos": "/assets/images/descuento.png"
+    };
+    return logoMap[storeName] || '/assets/images/descuento.png';
   }
 
   // Métodos de filtrado
@@ -216,6 +230,7 @@ export class MainPageClientComponent implements OnInit {
   }
 
   getMainImage(product: Product): string {
+
     return product.images && product.images.length > 0 ? product.images[0] : '/assets/images/no-image.png';
   }
 

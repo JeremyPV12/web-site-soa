@@ -1,2 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
+
+/* Estilos para scroll suave */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Asegura que los elementos destino no queden detrás del header fijo */
+[id] {
+  scroll-margin-top: 6rem; /* Ajusta según la altura de tu header */
+  padding-top: 1px; /* Pequeño truco para evitar que el contenido se oculte detrás del header */
+  margin-top: -1px;
+}
+
+@theme {
+    --color-dashboard-1: #0056B3;
+    --color-dashboard-2: #007BFF;
+}

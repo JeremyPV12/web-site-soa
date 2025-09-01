@@ -41,21 +41,25 @@
 
   <!-- Secciones de productos -->
   <div *ngIf="!loading && !error" class="catalog-content">
-    <div *ngFor="let section of productSections" class="product-section">
+    <div 
+      *ngFor="let section of productSections" 
+      class="product-section"
+      [id]="section.storeName"
+    >
       <div class="section-header">
         <div class="section-title-container">
           <h2 class="section-title">{{ section.title }}</h2>
-          <div *ngIf="section.storeName" class="store-indicator">
-            <span class="store-icon">🏪</span>
-          </div>
+          <img 
+            [src]="getStoreLogo(section.storeName!)" 
+            class="logo" 
+            [alt]="section.storeName"
+            [width]="section.title !== 'Descuentos' ? '120' : '50'"
+          >
         </div>
 
         <div class="section-actions">
           <button *ngIf="section.showAll" class="see-all-btn" (click)="verTodosProductos(section)">
             Ver todos los productos
-          </button>
-          <button *ngIf="section.storeName" class="visit-store-btn" (click)="navigateToStore(section.storeName!)">
-            Visitar tienda
           </button>
         </div>
       </div>

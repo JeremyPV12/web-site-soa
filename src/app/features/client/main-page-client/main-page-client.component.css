@@ -580,3 +580,9 @@
     max-width: 100%;
   }
 }
+
+.logo {
+  /* max-width: 140px; */
+  max-height: 90px;
+  object-fit: contain;
+}

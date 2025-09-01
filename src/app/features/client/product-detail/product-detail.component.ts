@@ -88,7 +88,6 @@ export class ProductDetailComponent implements OnInit {
       
       // Mostrar mensaje de confirmación (opcional)
       alert(`${this.selectedQuantity} ${this.product.name} agregado(s) al carrito`);
-      
       // Opcional: cerrar el modal después de agregar
       // this.closeModal();
     }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
@@ -27,5 +27,16 @@ export class AuthGuard implements CanActivate {
     });
     
     return false;
+  }
+}
+
+export const canActivateSignIn = () => {
+  const authService = inject(AuthService)
+  const roter = inject(Router)
+  if (authService.isLoggedIn()) {
+    roter.navigateByUrl('/')
+    return false
+    }else{
+    return true
   }
 }
