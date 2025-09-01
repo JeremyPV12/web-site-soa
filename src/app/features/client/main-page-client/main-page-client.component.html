@@ -41,15 +41,19 @@
 
   <!-- Secciones de productos -->
   <div *ngIf="!loading && !error" class="catalog-content">
-    <div *ngFor="let section of productSections" class="product-section">
+    <div 
+      *ngFor="let section of productSections" 
+      class="product-section"
+      [id]="section.storeName"
+    >
       <div class="section-header">
         <div class="section-title-container">
-          <h2 *ngIf="section.title === 'Descuentos'" class="section-title">{{ section.title }}</h2>
+          <h2 class="section-title">{{ section.title }}</h2>
           <img 
             [src]="getStoreLogo(section.storeName!)" 
             class="logo" 
             [alt]="section.storeName"
-            [width]="section.title !== 'Descuentos' ? '180' : '50'"
+            [width]="section.title !== 'Descuentos' ? '120' : '50'"
           >
         </div>
 

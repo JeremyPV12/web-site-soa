@@ -583,6 +583,6 @@
 
 .logo {
   /* max-width: 140px; */
-  /* max-height: 50px; */
+  max-height: 90px;
   object-fit: contain;
 }

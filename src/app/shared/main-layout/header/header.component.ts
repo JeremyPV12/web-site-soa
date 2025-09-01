@@ -22,9 +22,16 @@ export class HeaderComponent implements OnInit {
   isOpen = false;
   nameUser = ''
   constructor(private cartService: CartService, authService: AuthService, router: Router) {
-    this.cart$ = this.cartService.getCart();
+    this.cart$ = this.cartService.cart$;
     this.authService = authService;
     this.router = router;
+  }
+
+  scrollTo(sectionId: string): void {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
   ngOnInit(): void {
@@ -101,7 +108,6 @@ export class HeaderComponent implements OnInit {
   proceedToCheckout(): void {
     if(!this.authService.isLoggedIn()) {
       this.showCartDropdown = false;
-      alert('Debes iniciar sesión para proceder al checkout');
       this.router.navigate(['/login']);
       return;
     }
